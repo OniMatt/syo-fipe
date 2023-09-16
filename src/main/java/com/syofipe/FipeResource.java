@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import jakarta.json.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @Path( "/api/fipe" )
 @Produces( MediaType.APPLICATION_JSON )
@@ -22,29 +23,28 @@ public class FipeResource {
     FipeSchedule fipeSchedule;
 
     @GET
-    public JsonObject getAllModels() {
-        return formatModelJson( modelRepository.listAll() );
+    public Response getAllModels() {
+        return Response.ok( formatModelJson( modelRepository.listAll() ) ).build();
     }
 
     @GET
     @Path( "/marca/{brand}" )
-    public JsonObject getModelsByBrand( @PathParam( "brand" ) String brand ) {
-        return formatModelJson( modelRepository.getByBrand( brand ) );
+    public Response getModelsByBrand( @PathParam( "brand" ) String brand ) {
+        return Response.ok( formatModelJson( modelRepository.getByBrand( brand ) ) ).build();
     }
 
     @PATCH
     @Path( "/reprocessar" )
-    public JsonObject reprocess( @QueryParam( "marca" ) String brand ) {
+    public Response reprocess( @QueryParam( "marca" ) String brand ) {
         try {
             fipeSchedule.persistFipeModels();
             String json = "{\"status\": \"Reprocessamento da tabela fipe realizado\"}";
-            return Json.createReader( new StringReader( json ) ).readObject();
+            return Response.ok( Json.createReader( new StringReader( json ) ).readObject() ).build();
 
         } catch ( Exception e ) {
             e.printStackTrace();
             String json = "{\"status\": \"Ocorreu um erro ao reprocessar a tabela\"}";
-            return Json.createReader( new StringReader( json ) ).readObject();
-
+            return Response.ok( Json.createReader( new StringReader( json ) ).readObject() ).build();
         }
     }
 
