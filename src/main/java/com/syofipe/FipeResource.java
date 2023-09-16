@@ -3,7 +3,6 @@ package com.syofipe;
 import java.io.StringReader;
 import java.util.*;
 
-import com.syofipe.client.FipeSchedule;
 import com.syofipe.domain.Model;
 import com.syofipe.repository.ModelRepository;
 
